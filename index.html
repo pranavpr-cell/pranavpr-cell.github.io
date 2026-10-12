@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>P Pranav Raj // ECE Student @ IIT Roorkee</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        darkBg: '#080c14',
+                        cardBg: '#0f172a',
+                        neonCyan: '#00f2fe',
+                        neonBlue: '#4facfe',
+                        neonPurple: '#a855f7',
+                        neonPink: '#ec4899',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'float': 'float 5s ease-in-out infinite',
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-12px)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #080c14;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        .glass-panel {
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: rgba(15, 23, 42, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(0, 242, 254, 0.4);
+            box-shadow: 0 10px 30px -10px rgba(0, 242, 254, 0.15);
+            transform: translateY(-3px);
+        }
+
+        .glow-cyan {
+            box-shadow: 0 0 25px -5px rgba(0, 242, 254, 0.35);
+        }
+
+        .glow-purple {
+            box-shadow: 0 0 25px -5px rgba(168, 85, 247, 0.35);
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #00f2fe 0%, #4facfe 50%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .text-gradient-purple {
+            background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Canvas background overlay */
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+    </style>
+</head>
+<body class="bg-darkBg text-slate-100 font-sans antialiased selection:bg-neonCyan selection:text-darkBg overflow-x-hidden relative">
+
+    <!-- Ambient Interactive Particle Canvas Background -->
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Header & Navigation -->
+    <header class="fixed top-0 left-0 right-0 z-50 glass-panel border-b border-white/5 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <a href="#home" class="flex items-center space-x-3 group">
+                <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-neonCyan via-neonBlue to-neonPurple p-0.5 flex items-center justify-center glow-cyan group-hover:scale-105 transition-transform">
+                    <div class="w-full h-full bg-darkBg rounded-[10px] flex items-center justify-center font-mono font-bold text-neonCyan text-base">PR</div>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-extrabold text-lg tracking-tight text-white group-hover:text-neonCyan transition-colors">P PRANAV RAJ</span>
+                    <span class="text-[10px] font-mono text-slate-400 tracking-wider">ECE @ IIT ROORKEE</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center space-x-8 font-medium text-sm">
+                <a href="#home" class="text-slate-300 hover:text-neonCyan transition-colors nav-link flex items-center space-x-1.5"><i class="fa-solid fa-house text-xs opacity-70"></i><span>Home</span></a>
+                <a href="#resume" class="text-slate-300 hover:text-neonCyan transition-colors nav-link flex items-center space-x-1.5"><i class="fa-solid fa-file-invoice text-xs opacity-70"></i><span>Resume</span></a>
+                <a href="#blog" class="text-slate-300 hover:text-neonCyan transition-colors nav-link flex items-center space-x-1.5"><i class="fa-solid fa-pen-nib text-xs opacity-70"></i><span>Blog</span></a>
+                <a href="#contact" class="text-slate-300 hover:text-neonCyan transition-colors nav-link flex items-center space-x-1.5"><i class="fa-solid fa-paper-plane text-xs opacity-70"></i><span>Contact</span></a>
+            </nav>
+
+            <div class="hidden md:flex items-center space-x-4">
+                <a href="#contact" class="relative inline-flex items-center justify-center px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-all bg-gradient-to-r from-neonCyan to-neonBlue rounded-xl hover:opacity-90 glow-cyan active:scale-95">
+                    <span>Get In Touch</span>
+                </a>
+            </div>
+
+            <!-- Mobile Menu Toggle Button -->
+            <button id="mobile-menu-btn" aria-label="Toggle navigation menu" class="md:hidden text-slate-300 hover:text-white focus:outline-none p-2 rounded-lg bg-white/5 border border-white/10">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden glass-panel border-b border-white/10 px-6 py-6 space-y-4">
+            <a href="#home" class="block text-slate-300 hover:text-neonCyan font-medium mobile-link flex items-center space-x-3 py-2"><i class="fa-solid fa-house text-neonCyan"></i><span>Home</span></a>
+            <a href="#resume" class="block text-slate-300 hover:text-neonCyan font-medium mobile-link flex items-center space-x-3 py-2"><i class="fa-solid fa-file-invoice text-neonBlue"></i><span>Resume</span></a>
+            <a href="#blog" class="block text-slate-300 hover:text-neonCyan font-medium mobile-link flex items-center space-x-3 py-2"><i class="fa-solid fa-pen-nib text-neonPurple"></i><span>Blog</span></a>
+            <a href="#contact" class="block text-slate-300 hover:text-neonCyan font-medium mobile-link flex items-center space-x-3 py-2"><i class="fa-solid fa-paper-plane text-neonPink"></i><span>Contact</span></a>
+            <div class="pt-2">
+                <a href="#contact" class="w-full text-center block py-3 bg-gradient-to-r from-neonCyan to-neonBlue rounded-xl text-white font-bold text-xs uppercase tracking-wider">Get In Touch</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Home / Hero Section -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center pt-28 pb-16 px-4 sm:px-6 lg:px-8 z-10">
+        <!-- Background Ambient Glow Spheres -->
+        <div class="absolute top-1/4 left-1/4 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-neonCyan/15 rounded-full blur-[130px] pointer-events-none"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-neonPurple/15 rounded-full blur-[130px] pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                
+                <div class="inline-flex items-center space-x-2 px-4 py-2 rounded-full glass-panel border border-neonCyan/30 text-xs text-neonCyan font-mono">
+                    <span class="w-2.5 h-2.5 rounded-full bg-neonCyan animate-ping"></span>
+                    <span>1st Year B.Tech ECE @ IIT Roorkee</span>
+                </div>
+                
+                <h1 class="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-white leading-none">
+                    Hi, I'm <span class="text-gradient">P Pranav Raj</span>
+                </h1>
+
+                <!-- Typewriter Container -->
+                <div class="text-lg sm:text-2xl font-mono text-slate-300 h-10 flex items-center justify-center lg:justify-start">
+                    <span>Focused on </span>
+                    <span id="typewriter" class="text-neonCyan font-semibold ml-2 border-r-2 border-neonCyan pr-1"></span>
+                </div>
+
+                <p class="text-slate-400 text-base sm:text-lg max-w-2xl mx-auto lg:mx-0 font-light leading-relaxed">
+                    First-year ECE student at IIT Roorkee passionate about core electronics, Python programming, numerical algorithms, data structures, audio signal processing, and web development.
+                </p>
+
+                <!-- Action Buttons -->
+                <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-2">
+                    <a href="#resume" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-neonCyan to-neonBlue text-darkBg font-bold shadow-lg glow-cyan hover:opacity-95 transition-all transform hover:-translate-y-0.5 flex items-center space-x-2">
+                        <i class="fa-solid fa-file-invoice"></i>
+                        <span>Explore Resume</span>
+                    </a>
+                    <a href="#blog" class="px-7 py-3.5 rounded-xl glass-panel text-white font-semibold hover:border-neonCyan/50 transition-all transform hover:-translate-y-0.5 flex items-center space-x-2">
+                        <i class="fa-solid fa-book-open text-neonCyan"></i>
+                        <span>Read IITR Story</span>
+                    </a>
+                    <button onclick="openResumeModal()" class="px-5 py-3.5 rounded-xl text-slate-300 hover:text-white glass-card font-medium flex items-center space-x-2">
+                        <i class="fa-solid fa-download text-neonPurple"></i>
+                        <span>Quick CV View</span>
+                    </button>
+                </div>
+
+                <!-- Interactive Tech Skill Tags -->
+                <div class="pt-6 border-t border-white/10">
+                    <div class="text-xs font-mono text-slate-400 mb-3 uppercase tracking-wider">Primary Technical Toolkit</div>
+                    <div class="flex flex-wrap gap-2 justify-center lg:justify-start">
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono bg-slate-900/80 text-neonCyan border border-neonCyan/20 hover:border-neonCyan transition-colors cursor-default"><i class="fa-brands fa-python mr-1.5"></i>Python</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono bg-slate-900/80 text-neonBlue border border-neonBlue/20 hover:border-neonBlue transition-colors cursor-default"><i class="fa-solid fa-code mr-1.5"></i>C / C++</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono bg-slate-900/80 text-neonPurple border border-neonPurple/20 hover:border-neonPurple transition-colors cursor-default"><i class="fa-solid fa-diagram-project mr-1.5"></i>Data Structures</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono bg-slate-900/80 text-emerald-400 border border-emerald-400/20 hover:border-emerald-400 transition-colors cursor-default"><i class="fa-solid fa-calculator mr-1.5"></i>Numerical Methods</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono bg-slate-900/80 text-amber-400 border border-amber-400/20 hover:border-amber-400 transition-colors cursor-default"><i class="fa-solid fa-microchip mr-1.5"></i>Basic Electronics</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono bg-slate-900/80 text-neonPink border border-neonPink/20 hover:border-neonPink transition-colors cursor-default"><i class="fa-solid fa-wave-square mr-1.5"></i>Audio DSP</span>
+                        <span class="px-3 py-1.5 rounded-lg text-xs font-mono bg-slate-900/80 text-indigo-400 border border-indigo-400/20 hover:border-indigo-400 transition-colors cursor-default"><i class="fa-brands fa-git-alt mr-1.5"></i>Git & PyCharm</span>
+                    </div>
+                </div>
+
+                <!-- Campus Stats -->
+                <div class="grid grid-cols-3 gap-4 pt-6 max-w-lg mx-auto lg:mx-0">
+                    <div class="glass-card p-3 rounded-xl text-center">
+                        <div class="text-2xl font-extrabold text-white font-mono">IITR</div>
+                        <div class="text-[11px] text-slate-400 mt-0.5">Roorkee Campus</div>
+                    </div>
+                    <div class="glass-card p-3 rounded-xl text-center">
+                        <div class="text-2xl font-extrabold text-neonCyan font-mono">ECE</div>
+                        <div class="text-[11px] text-slate-400 mt-0.5">Department</div>
+                    </div>
+                    <div class="glass-card p-3 rounded-xl text-center">
+                        <div class="text-2xl font-extrabold text-neonPurple font-mono">2028</div>
+                        <div class="text-[11px] text-slate-400 mt-0.5">Grad Year</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Terminal / Dynamic Visual Card -->
+            <div class="lg:col-span-5 flex justify-center">
+                <div class="relative w-full max-w-md animate-float">
+                    <div class="absolute -inset-1 rounded-2xl bg-gradient-to-r from-neonCyan via-neonBlue to-neonPurple opacity-30 blur-xl"></div>
+                    <div class="relative glass-panel rounded-2xl p-6 border border-white/10 shadow-2xl">
+                        
+                        <!-- Terminal Bar -->
+                        <div class="flex items-center justify-between pb-4 border-b border-white/10 mb-4">
+                            <div class="flex items-center space-x-2">
+                                <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                                <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                                <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                            </div>
+                            <span class="text-xs font-mono text-slate-400">pranav_profile.py</span>
+                            <div class="w-4"></div>
+                        </div>
+
+                        <pre class="font-mono text-xs sm:text-sm text-slate-300 overflow-x-auto leading-relaxed"><code><span class="text-purple-400">class</span> <span class="text-cyan-300">ECEStudent</span>:
+    <span class="text-purple-400">def</span> <span class="text-blue-300">__init__</span>(<span class="text-orange-300">self</span>):
+        <span class="text-orange-300">self</span>.name = <span class="text-emerald-300">"P Pranav Raj"</span>
+        <span class="text-orange-300">self</span>.institute = <span class="text-emerald-300">"IIT Roorkee"</span>
+        <span class="text-orange-300">self</span>.branch = <span class="text-emerald-300">"ECE"</span>
+        <span class="text-orange-300">self</span>.year = <span class="text-emerald-300">"1st Year B.Tech"</span>
+        <span class="text-orange-300">self</span>.interests = [
+            <span class="text-emerald-300">"Core Electronics"</span>,
+            <span class="text-emerald-300">"Signal Processing"</span>,
+            <span class="text-emerald-300">"Numerical Algorithms"</span>,
+            <span class="text-emerald-300">"Web Development"</span>
+        ]
+
+    <span class="text-purple-400">def</span> <span class="text-blue-300">get_status</span>(<span class="text-orange-300">self</span>):
+        <span class="text-purple-400">return</span> <span class="text-emerald-300">"Coding & Exploring Signals!"</span>
+
+<span class="text-cyan-300">pranav</span> = ECEStudent()
+<span class="text-purple-400">print</span>(pranav.get_status())</code></pre>
+
+                        <!-- Floating Badge -->
+                        <div class="mt-6 p-3 rounded-xl bg-slate-900/90 border border-neonCyan/40 flex items-center justify-between shadow-xl">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-9 h-9 rounded-lg bg-neonCyan/20 flex items-center justify-center text-neonCyan">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                </div>
+                                <div>
+                                    <div class="text-[10px] text-slate-400 uppercase font-mono">Current Station</div>
+                                    <div class="text-xs font-bold text-white">Department of ECE, IIT Roorkee</div>
+                                </div>
+                            </div>
+                            <span class="px-2 py-1 bg-neonCyan/10 text-neonCyan text-[10px] font-mono rounded border border-neonCyan/30">ACTIVE</span>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Resume Section -->
+    <section id="resume" class="py-24 px-4 sm:px-6 lg:px-8 relative z-10 bg-slate-950/50">
+        <div class="max-w-6xl mx-auto">
+            
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <div class="text-neonCyan font-mono text-xs uppercase tracking-widest mb-3">Academic & Technical Record</div>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">Interactive Resume</h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-neonCyan via-neonBlue to-neonPurple mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Category Filter Tabs -->
+            <div class="flex flex-wrap justify-center gap-3 mb-12">
+                <button onclick="switchResumeTab('all')" id="tab-all" class="resume-tab px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all bg-gradient-to-r from-neonCyan to-neonBlue text-darkBg glow-cyan">
+                    All Sections
+                </button>
+                <button onclick="switchResumeTab('education')" id="tab-education" class="resume-tab px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all glass-card text-slate-300 hover:text-white">
+                    Education
+                </button>
+                <button onclick="switchResumeTab('skills')" id="tab-skills" class="resume-tab px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all glass-card text-slate-300 hover:text-white">
+                    Skills
+                </button>
+                <button onclick="switchResumeTab('projects')" id="tab-projects" class="resume-tab px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all glass-card text-slate-300 hover:text-white">
+                    Projects
+                </button>
+                <button onclick="switchResumeTab('coursework')" id="tab-coursework" class="resume-tab px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all glass-card text-slate-300 hover:text-white">
+                    Coursework
+                </button>
+            </div>
+
+            <!-- Resume Content Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                
+                <!-- Education Box -->
+                <div class="resume-card glass-panel p-8 rounded-2xl border border-white/10 space-y-6" data-category="education">
+                    <div class="flex items-center justify-between pb-4 border-b border-white/10">
+                        <h3 class="text-xl font-bold text-white flex items-center space-x-3">
+                            <i class="fa-solid fa-graduation-cap text-neonCyan"></i>
+                            <span>Education</span>
+                        </h3>
+                        <span class="text-xs font-mono text-neonCyan bg-neonCyan/10 px-2.5 py-1 rounded border border-neonCyan/30">Current</span>
+                    </div>
+
+                    <div class="relative pl-6 border-l-2 border-neonCyan/40 space-y-4">
+                        <div class="text-xs font-mono text-neonCyan">2024 - 2028</div>
+                        <h4 class="text-xl font-extrabold text-white">Bachelor of Technology (B.Tech)</h4>
+                        <div class="text-sm font-semibold text-slate-300">Electronics and Communication Engineering</div>
+                        <div class="text-sm text-neonBlue font-medium">Indian Institute of Technology (IIT), Roorkee</div>
+                        <p class="text-slate-400 text-sm leading-relaxed pt-2">
+                            Enrolled in first-year foundational coursework covering advanced engineering mathematics, programming methodologies, circuit principles, and analytical problem-solving.
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Skills Box -->
+                <div class="resume-card glass-panel p-8 rounded-2xl border border-white/10 space-y-6" data-category="skills">
+                    <div class="flex items-center justify-between pb-4 border-b border-white/10">
+                        <h3 class="text-xl font-bold text-white flex items-center space-x-3">
+                            <i class="fa-solid fa-gears text-neonPurple"></i>
+                            <span>Technical Toolkit</span>
+                        </h3>
+                        <span class="text-xs font-mono text-neonPurple bg-neonPurple/10 px-2.5 py-1 rounded border border-neonPurple/30">Skills</span>
+                    </div>
+
+                    <div class="space-y-4">
+                        <div>
+                            <div class="flex justify-between text-xs font-mono text-slate-300 mb-1">
+                                <span>Python & Numerical Algorithms</span>
+                                <span class="text-neonCyan">Advanced</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-neonCyan to-neonBlue h-full rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-mono text-slate-300 mb-1">
+                                <span>C / C++ & Data Structures</span>
+                                <span class="text-neonBlue">Proficient</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-neonBlue to-neonPurple h-full rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-mono text-slate-300 mb-1">
+                                <span>Web Engineering (HTML, CSS, JS)</span>
+                                <span class="text-neonPurple">Intermediate</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-neonPurple to-neonPink h-full rounded-full" style="width: 80%"></div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <div class="flex justify-between text-xs font-mono text-slate-300 mb-1">
+                                <span>Basic Electronics & Audio DSP Concepts</span>
+                                <span class="text-emerald-400">Foundational</span>
+                            </div>
+                            <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                                <div class="bg-gradient-to-r from-emerald-400 to-neonCyan h-full rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Projects Box -->
+                <div class="resume-card md:col-span-2 glass-panel p-8 rounded-2xl border border-white/10 space-y-6" data-category="projects">
+                    <div class="flex items-center justify-between pb-4 border-b border-white/10">
+                        <h3 class="text-xl font-bold text-white flex items-center space-x-3">
+                            <i class="fa-solid fa-code-branch text-neonCyan"></i>
+                            <span>Key Projects</span>
+                        </h3>
+                        <span class="text-xs font-mono text-neonCyan bg-neonCyan/10 px-2.5 py-1 rounded border border-neonCyan/30">Practical Applications</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Project 1 -->
+                        <div class="glass-card p-6 rounded-xl border border-white/5 hover:border-neonCyan/40 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-neonCyan/10 text-neonCyan border border-neonCyan/30">Audio & Signal Processing</span>
+                                    <i class="fa-solid fa-wave-square text-neonCyan"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-white mb-2">Real-Time Audio Spectrum Visualizer</h4>
+                                <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                                    Designed a real-time audio visualization tool using Python, processing microphone input or audio files to display frequency spectra using Fast Fourier Transforms (FFT).
+                                </p>
+                            </div>
+                            <div class="flex flex-wrap gap-2 pt-3 border-t border-white/10">
+                                <span class="px-2 py-0.5 rounded text-xs font-mono bg-slate-900 text-slate-300">Python</span>
+                                <span class="px-2 py-0.5 rounded text-xs font-mono bg-slate-900 text-slate-300">NumPy</span>
+                                <span class="px-2 py-0.5 rounded text-xs font-mono bg-slate-900 text-slate-300">Matplotlib</span>
+                                <span class="px-2 py-0.5 rounded text-xs font-mono bg-slate-900 text-slate-300">FFT</span>
+                            </div>
+                        </div>
+
+                        <!-- Project 2 -->
+                        <div class="glass-card p-6 rounded-xl border border-white/5 hover:border-neonPurple/40 flex flex-col justify-between">
+                            <div>
+                                <div class="flex items-center justify-between mb-3">
+                                    <span class="px-2.5 py-0.5 rounded text-[11px] font-mono bg-neonPurple/10 text-neonPurple border border-neonPurple/30">Web Engineering</span>
+                                    <i class="fa-solid fa-globe text-neonPurple"></i>
+                                </div>
+                                <h4 class="text-lg font-bold text-white mb-2">Personal Interactive Portfolio</h4>
+                                <p class="text-slate-300 text-sm leading-relaxed mb-4">
+                                    Developed a modern, responsive single-page web portfolio showcasing academic achievements, interactive project tabs, dynamic canvas background, and personal blog entries.
+                                </p>
+                            </div>
+                            <div class="flex flex-wrap gap-2 pt-3 border-t border-white/10">
+                                <span class="px-2 py-0.5 rounded text-xs font-mono bg-slate-900 text-slate-300">HTML5</span>
+                                <span class="px-2 py-0.5 rounded text-xs font-mono bg-slate-900 text-slate-300">Tailwind CSS</span>
+                                <span class="px-2 py-0.5 rounded text-xs font-mono bg-slate-900 text-slate-300">JavaScript ES6</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Coursework Box -->
+                <div class="resume-card md:col-span-2 glass-panel p-8 rounded-2xl border border-white/10 space-y-6" data-category="coursework">
+                    <div class="flex items-center justify-between pb-4 border-b border-white/10">
+                        <h3 class="text-xl font-bold text-white flex items-center space-x-3">
+                            <i class="fa-solid fa-book-bookmark text-neonPink"></i>
+                            <span>Current Academic Coursework</span>
+                        </h3>
+                        <span class="text-xs font-mono text-neonPink bg-neonPink/10 px-2.5 py-1 rounded border border-neonPink/30">1st Year ECE</span>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        <div class="p-4 rounded-xl bg-slate-900/70 border border-white/5 space-y-2">
+                            <div class="text-neonCyan font-mono text-xs">MA-101</div>
+                            <div class="font-bold text-white text-sm">Multivariable Differential Calculus</div>
+                            <p class="text-xs text-slate-400">Partial derivatives, multiple integrals, gradient vectors, and optimization techniques.</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-900/70 border border-white/5 space-y-2">
+                            <div class="text-neonBlue font-mono text-xs">MA-102</div>
+                            <div class="font-bold text-white text-sm">Matrix Theory & Linear Algebra</div>
+                            <p class="text-xs text-slate-400">Vector spaces, linear transformations, eigenvalues, eigenvectors, and matrix decompositions.</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-900/70 border border-white/5 space-y-2">
+                            <div class="text-neonPurple font-mono text-xs">EC-101</div>
+                            <div class="font-bold text-white text-sm">Basic Electronics & Circuit Theory</div>
+                            <p class="text-xs text-slate-400">Semiconductor devices, diode circuits, transistors, KVL/KCL, and nodal circuit analysis.</p>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Download CV / Action Banner -->
+            <div class="mt-12 p-8 rounded-2xl glass-panel border border-neonCyan/30 text-center flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xl">
+                <div class="text-left space-y-1">
+                    <h4 class="text-xl font-extrabold text-white">Need a formal copy of my CV?</h4>
+                    <p class="text-slate-400 text-sm">Download a summary of P Pranav Raj's qualifications and coursework.</p>
+                </div>
+                <button onclick="openResumeModal()" class="px-6 py-3 rounded-xl bg-gradient-to-r from-neonCyan via-neonBlue to-neonPurple text-darkBg font-bold text-xs uppercase tracking-wider glow-cyan hover:opacity-95 transition-all whitespace-nowrap flex items-center space-x-2">
+                    <i class="fa-solid fa-download"></i>
+                    <span>Download / View CV</span>
+                </button>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Blog Section -->
+    <section id="blog" class="py-24 px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="max-w-4xl mx-auto">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <div class="text-neonCyan font-mono text-xs uppercase tracking-widest mb-3">Personal Reflections & Campus Stories</div>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">Campus Blog</h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-neonCyan to-neonPurple mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Featured Blog Entry Card -->
+            <article class="glass-panel p-8 sm:p-12 rounded-2xl border border-white/10 space-y-8 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-neonCyan/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-white/10 text-xs font-mono text-slate-400">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-9 h-9 rounded-full bg-gradient-to-tr from-neonCyan to-neonPurple flex items-center justify-center text-white font-bold">PR</div>
+                        <span class="text-slate-200 font-semibold">P Pranav Raj</span>
+                    </div>
+                    <div class="flex items-center space-x-4">
+                        <span><i class="fa-regular fa-calendar mr-1.5 text-neonCyan"></i> October 2024</span>
+                        <span><i class="fa-regular fa-clock mr-1.5 text-neonPurple"></i> 5 min read</span>
+                    </div>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="inline-block px-3 py-1 rounded-full text-xs font-mono bg-neonCyan/10 text-neonCyan border border-neonCyan/30">
+                        Campus Reflection #01
+                    </div>
+                    <h3 class="text-2xl sm:text-4xl font-extrabold text-white leading-tight hover:text-neonCyan transition-colors cursor-pointer" onclick="openBlogModal()">
+                        My First Day at IIT Roorkee
+                    </h3>
+                </div>
+
+                <div class="space-y-4 text-slate-300 leading-relaxed font-light text-base sm:text-lg">
+                    <p class="first-letter:text-5xl first-letter:font-extrabold first-letter:text-neonCyan first-letter:mr-3 first-letter:float-left">
+                        Stepping through the historic gates of the Indian Institute of Technology, Roorkee for the very first time was a moment I will cherish forever. As I carried my bags through the lush green pathways of this centuries-old campus, the blend of grand colonial heritage and modern technical vibrancy was truly overwhelming...
+                    </p>
+                </div>
+
+                <div class="pt-6 border-t border-white/10 flex flex-wrap items-center justify-between gap-4">
+                    <div class="flex flex-wrap gap-2">
+                        <span class="px-3 py-1 rounded-full text-xs font-mono bg-white/5 text-slate-300">#IITRoorkee</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-mono bg-white/5 text-slate-300">#ECE</span>
+                        <span class="px-3 py-1 rounded-full text-xs font-mono bg-white/5 text-slate-300">#MGCentralLibrary</span>
+                    </div>
+                    <button onclick="openBlogModal()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-neonCyan to-neonBlue text-darkBg font-bold text-xs uppercase tracking-wider glow-cyan hover:opacity-95 transition-all flex items-center space-x-2">
+                        <span>Read Full Story</span>
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+                </div>
+            </article>
+
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-24 px-4 sm:px-6 lg:px-8 relative z-10 bg-slate-950/50">
+        <div class="max-w-7xl mx-auto">
+            
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <div class="text-neonCyan font-mono text-xs uppercase tracking-widest mb-3">Communication Channels</div>
+                <h2 class="text-3xl sm:text-5xl font-extrabold text-white">Get In Touch</h2>
+                <div class="w-20 h-1 bg-gradient-to-r from-neonCyan via-neonBlue to-neonPurple mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                
+                <!-- Contact Links & Info Card -->
+                <div class="lg:col-span-5 space-y-6">
+                    <div class="glass-panel p-8 rounded-2xl border border-white/10 space-y-6">
+                        <h3 class="text-2xl font-bold text-white">Connect with Pranav</h3>
+                        <p class="text-slate-300 text-sm leading-relaxed">
+                            Feel free to send an inquiry regarding collaborative coding projects, signal processing discussions, or academic outreach at IIT Roorkee.
+                        </p>
+
+                        <div class="space-y-4 pt-2">
+                            <!-- Email Item -->
+                            <div class="p-4 rounded-xl glass-card flex items-center justify-between">
+                                <div class="flex items-center space-x-3 overflow-hidden">
+                                    <div class="w-10 h-10 rounded-lg bg-neonCyan/10 text-neonCyan flex items-center justify-center shrink-0">
+                                        <i class="fa-regular fa-envelope text-lg"></i>
+                                    </div>
+                                    <div class="truncate">
+                                        <div class="text-[11px] text-slate-400 font-mono">Email Address</div>
+                                        <div class="text-xs font-bold text-white font-mono truncate" id="email-text">pranav_pr@ece.iitr.ac.in</div>
+                                    </div>
+                                </div>
+                                <button onclick="copyEmail()" aria-label="Copy email address" class="px-3 py-2 rounded-lg bg-white/5 hover:bg-neonCyan hover:text-darkBg text-slate-300 transition-all text-xs font-semibold shrink-0">
+                                    <span id="copy-btn-text">Copy</span>
+                                </button>
+                            </div>
+
+                            <!-- GitHub Profile -->
+                            <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="p-4 rounded-xl glass-card flex items-center justify-between group">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-lg bg-neonPurple/10 text-neonPurple flex items-center justify-center shrink-0">
+                                        <i class="fa-brands fa-github text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-[11px] text-slate-400 font-mono">GitHub Profile</div>
+                                        <div class="text-xs font-bold text-white group-hover:text-neonPurple transition-colors">github.com/pranavraj-iitr</div>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-500 group-hover:text-neonPurple transition-colors"></i>
+                            </a>
+
+                            <!-- LinkedIn Placeholder -->
+                            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="p-4 rounded-xl glass-card flex items-center justify-between group">
+                                <div class="flex items-center space-x-3">
+                                    <div class="w-10 h-10 rounded-lg bg-neonBlue/10 text-neonBlue flex items-center justify-center shrink-0">
+                                        <i class="fa-brands fa-linkedin-in text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-[11px] text-slate-400 font-mono">LinkedIn Network</div>
+                                        <div class="text-xs font-bold text-white group-hover:text-neonBlue transition-colors">linkedin.com/in/p-pranav-raj</div>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs text-slate-500 group-hover:text-neonBlue transition-colors"></i>
+                            </a>
+
+                            <!-- Location Info -->
+                            <div class="p-4 rounded-xl glass-card flex items-center space-x-3">
+                                <div class="w-10 h-10 rounded-lg bg-emerald-500/10 text-emerald-400 flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-location-dot text-lg"></i>
+                                </div>
+                                <div>
+                                    <div class="text-[11px] text-slate-400 font-mono">Current Location</div>
+                                    <div class="text-xs font-bold text-white">IIT Roorkee, Uttarakhand 247667, India</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Interactive Message Form -->
+                <div class="lg:col-span-7">
+                    <form id="contact-form" onsubmit="handleFormSubmit(event)" class="glass-panel p-8 rounded-2xl border border-white/10 space-y-6">
+                        <h3 class="text-2xl font-bold text-white">Send Direct Message</h3>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                            <div class="space-y-2">
+                                <label for="name" class="text-xs font-mono text-slate-300">Your Full Name</label>
+                                <input type="text" id="name" required class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-neonCyan transition-colors text-sm" placeholder="Rohan Sharma">
+                            </div>
+                            <div class="space-y-2">
+                                <label for="email" class="text-xs font-mono text-slate-300">Your Email Address</label>
+                                <input type="email" id="email" required class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-neonCyan transition-colors text-sm" placeholder="rohan@example.com">
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="subject" class="text-xs font-mono text-slate-300">Subject / Topic</label>
+                            <input type="text" id="subject" required class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-neonCyan transition-colors text-sm" placeholder="Project Collaboration / Academic Inquiry">
+                        </div>
+
+                        <div class="space-y-2">
+                            <label for="message" class="text-xs font-mono text-slate-300">Message Details</label>
+                            <textarea id="message" rows="5" required class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-white/10 text-white placeholder-slate-500 focus:outline-none focus:border-neonCyan transition-colors text-sm" placeholder="Write your message here..."></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full py-4 rounded-xl bg-gradient-to-r from-neonCyan via-neonBlue to-neonPurple text-darkBg font-extrabold text-xs uppercase tracking-wider glow-cyan hover:opacity-95 transition-all flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-paper-plane"></i>
+                            <span>Transmit Message</span>
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Blog Full Article Reading Modal -->
+    <div id="blog-modal" class="fixed inset-0 z-50 hidden bg-darkBg/90 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+        <div class="relative w-full max-w-3xl glass-panel p-6 sm:p-10 rounded-2xl border border-white/15 my-8 max-h-[90vh] overflow-y-auto">
+            <!-- Close Button -->
+            <button onclick="closeBlogModal()" aria-label="Close modal" class="absolute top-6 right-6 text-slate-400 hover:text-white p-2 rounded-lg bg-white/5 border border-white/10">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <div class="space-y-6">
+                <div class="flex items-center space-x-3 text-xs font-mono text-neonCyan">
+                    <span>DEPARTMENT OF ECE</span>
+                    <span>•</span>
+                    <span>CAMPUS CHRONICLES</span>
+                </div>
+
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight">
+                    My First Day at IIT Roorkee
+                </h2>
+
+                <div class="flex items-center space-x-4 pb-6 border-b border-white/10 text-xs font-mono text-slate-400">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-7 h-7 rounded-full bg-neonCyan text-darkBg flex items-center justify-center font-bold">PR</div>
+                        <span class="text-slate-200">P Pranav Raj</span>
+                    </div>
+                    <span>•</span>
+                    <span>October 2024</span>
+                </div>
+
+                <!-- Markdown Styled Content -->
+                <div class="space-y-6 text-slate-300 font-light text-base sm:text-lg leading-relaxed">
+                    <p class="first-letter:text-5xl first-letter:font-extrabold first-letter:text-neonCyan first-letter:mr-3 first-letter:float-left">
+                        Stepping through the historic gates of the Indian Institute of Technology, Roorkee for the very first time was a moment I will cherish forever. As I carried my bags through the lush green pathways of this centuries-old campus, the blend of grand colonial heritage and modern technical vibrancy was truly overwhelming.
+                    </p>
+
+                    <h3 class="text-2xl font-bold text-white pt-2 border-l-4 border-neonCyan pl-3">Arrival at the Historic Campus</h3>
+                    <p>
+                        The iconic James Thomason Building with its pristine white facade stood majestically against the sky. Seeing the clock tower in person—a landmark I had gazed at on my screen during months of JEE preparation—instantly made all the late-night study sessions feel worth every second.
+                    </p>
+
+                    <h3 class="text-2xl font-bold text-white pt-2 border-l-4 border-neonBlue pl-3">Visiting Mahatma Gandhi Central Library</h3>
+                    <p>
+                        Later in the afternoon, my batchmates and I explored the famous <strong>Mahatma Gandhi Central Library</strong>. The multi-story sanctuary of knowledge, equipped with high-speed networks, thousands of research journals, and vast quiet study bays, left us awestruck. Knowing that generations of pioneering engineers sat in these very rooms made me feel immense pride to now be part of this legacy.
+                    </p>
+
+                    <h3 class="text-2xl font-bold text-white pt-2 border-l-4 border-neonPurple pl-3">Meeting Batchmates & ECE Induction</h3>
+                    <p>
+                        During the evening hostel orientation, I interacted with students from all across India. Discussing everything from algorithmic problem solving to sound synthesis and electronic hardware created an instant bond. Entering the Electronics & Communication Engineering department, I knew I was stepping into a world where I could turn ideas into real-world innovations.
+                    </p>
+
+                    <blockquote class="p-4 rounded-xl bg-slate-900/80 border-l-4 border-neonPink text-slate-200 italic font-mono text-sm">
+                        "The first day at IIT Roorkee wasn't just the start of college—it was the moment curiosity met purpose."
+                    </blockquote>
+                </div>
+
+                <div class="pt-6 border-t border-white/10 flex justify-end">
+                    <button onclick="closeBlogModal()" class="px-6 py-2.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-bold text-xs uppercase tracking-wider">
+                        Close Article
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Resume Quick View / CV Modal -->
+    <div id="resume-modal" class="fixed inset-0 z-50 hidden bg-darkBg/90 backdrop-blur-xl flex items-center justify-center p-4 sm:p-6 overflow-y-auto">
+        <div class="relative w-full max-w-2xl glass-panel p-6 sm:p-8 rounded-2xl border border-white/15 my-8">
+            <button onclick="closeResumeModal()" aria-label="Close CV modal" class="absolute top-6 right-6 text-slate-400 hover:text-white p-2 rounded-lg bg-white/5 border border-white/10">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+
+            <div class="space-y-6">
+                <div class="text-center pb-6 border-b border-white/10">
+                    <h2 class="text-3xl font-extrabold text-white">P PRANAV RAJ</h2>
+                    <p class="text-neonCyan font-mono text-xs mt-1">B.Tech Electronics & Communication Engineering — IIT Roorkee</p>
+                    <p class="text-slate-400 text-xs mt-1">Email: pranav_pr@ece.iitr.ac.in | Location: Roorkee, India</p>
+                </div>
+
+                <div class="space-y-4 text-xs font-mono">
+                    <div class="p-4 rounded-xl bg-slate-900/80 border border-white/5 space-y-2">
+                        <div class="text-neonCyan font-bold">SUMMARY STATEMENT</div>
+                        <p class="text-slate-300 font-sans leading-relaxed">
+                            First-year ECE undergraduate at IIT Roorkee with strong foundation in core electronics, Python programming, numerical algorithms, data structures, and web technologies. Driven to engineer practical signal processing and hardware-software systems.
+                        </p>
+                    </div>
+
+                    <div class="p-4 rounded-xl bg-slate-900/80 border border-white/5 space-y-2">
+                        <div class="text-neonBlue font-bold">CORE SKILLS</div>
+                        <div class="text-slate-300 font-sans">
+                            <strong>Languages:</strong> Python, C, C++, HTML5, CSS3, JavaScript<br>
+                            <strong>Tools & Environments:</strong> PyCharm, Git, GitHub, VS Code<br>
+                            <strong>Domains:</strong> Audio Signal Processing, Numerical Methods, Data Structures, Basic Circuit Analysis
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/10">
+                    <span class="text-xs text-slate-400 font-mono">Document: P_Pranav_Raj_Resume.pdf</span>
+                    <button onclick="downloadResume()" class="w-full sm:w-auto px-6 py-3 rounded-xl bg-gradient-to-r from-neonCyan to-neonBlue text-darkBg font-bold text-xs uppercase tracking-wider glow-cyan hover:opacity-95 transition-all flex items-center justify-center space-x-2">
+                        <i class="fa-solid fa-download"></i>
+                        <span>Download PDF Version</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-white/10 text-center text-slate-400 text-sm relative z-10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+            <div class="flex items-center space-x-2">
+                <span class="font-bold text-white">P Pranav Raj</span>
+                <span>&copy; 2026. IIT Roorkee ECE. All rights reserved.</span>
+            </div>
+            <div>
+                <a href="#home" class="text-xs font-mono text-neonCyan hover:underline flex items-center space-x-1">
+                    <span>Back to Top</span>
+                    <i class="fa-solid fa-arrow-up"></i>
+                </a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Notification Toast Popup -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 glass-panel px-6 py-3.5 rounded-xl border border-neonCyan/50 text-white text-sm flex items-center space-x-3 shadow-2xl pointer-events-none">
+        <i class="fa-solid fa-circle-check text-neonCyan text-lg"></i>
+        <span id="toast-message">Notification message</span>
+    </div>
+
+    <!-- Application Logic Script -->
+    <script>
+        // Interactive Canvas Ambient Particle Effect
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        class Particle {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.size = Math.random() * 2 + 0.5;
+                this.speedX = (Math.random() - 0.5) * 0.4;
+                this.speedY = (Math.random() - 0.5) * 0.4;
+                this.color = Math.random() > 0.5 ? '#00f2fe' : '#a855f7';
+                this.opacity = Math.random() * 0.5 + 0.1;
+            }
+            update() {
+                this.x += this.speedX;
+                this.y += this.speedY;
+
+                if (this.x < 0) this.x = canvas.width;
+                if (this.x > canvas.width) this.x = 0;
+                if (this.y < 0) this.y = canvas.height;
+                if (this.y > canvas.height) this.y = 0;
+            }
+            draw() {
+                ctx.fillStyle = this.color;
+                ctx.globalAlpha = this.opacity;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            const count = Math.min(Math.floor(window.innerWidth / 15), 60);
+            for (let i = 0; i < count; i++) {
+                particles.push(new Particle());
+            }
+        }
+        initParticles();
+
+        function animateParticles() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateParticles);
+        }
+        animateParticles();
+
+        // Typewriter Effect
+        const typewriterWords = [
+            "Core Electronics",
+            "Python Programming",
+            "Numerical Algorithms",
+            "Audio Signal Processing",
+            "Data Structures"
+        ];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeLoop() {
+            const currentWord = typewriterWords[wordIndex];
+            const targetEl = document.getElementById('typewriter');
+
+            if (isDeleting) {
+                targetEl.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+            } else {
+                targetEl.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+            }
+
+            let typeSpeed = isDeleting ? 40 : 90;
+
+            if (!isDeleting && charIndex === currentWord.length) {
+                typeSpeed = 2200;
+                isDeleting = true;
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % typewriterWords.length;
+                typeSpeed = 400;
+            }
+
+            setTimeout(typeLoop, typeSpeed);
+        }
+        typeLoop();
+
+        // Mobile Menu Logic
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => mobileMenu.classList.add('hidden'));
+        });
+
+        // Resume Tab Switcher
+        function switchResumeTab(category) {
+            const tabs = document.querySelectorAll('.resume-tab');
+            tabs.forEach(tab => {
+                tab.className = 'resume-tab px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all glass-card text-slate-300 hover:text-white';
+            });
+
+            const activeTab = document.getElementById(`tab-${category}`);
+            if (activeTab) {
+                activeTab.className = 'resume-tab px-5 py-2.5 rounded-xl text-xs font-mono font-bold transition-all bg-gradient-to-r from-neonCyan to-neonBlue text-darkBg glow-cyan';
+            }
+
+            const cards = document.querySelectorAll('.resume-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        // Copy Email Logic
+        function copyEmail() {
+            const emailText = document.getElementById('email-text').innerText;
+            const tempInput = document.createElement('textarea');
+            tempInput.value = emailText;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            document.getElementById('copy-btn-text').innerText = 'Copied!';
+            showToast('Email address copied to clipboard!');
+            setTimeout(() => {
+                document.getElementById('copy-btn-text').innerText = 'Copy';
+            }, 2500);
+        }
+
+        // Form Submit Handler
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            showToast(`Thank you, ${name}! Your message was transmitted successfully.`);
+            document.getElementById('contact-form').reset();
+        }
+
+        // Modal Helpers
+        function openBlogModal() {
+            document.getElementById('blog-modal').classList.remove('hidden');
+        }
+        function closeBlogModal() {
+            document.getElementById('blog-modal').classList.add('hidden');
+        }
+
+        function openResumeModal() {
+            document.getElementById('resume-modal').classList.remove('hidden');
+        }
+        function closeResumeModal() {
+            document.getElementById('resume-modal').classList.add('hidden');
+        }
+
+        function downloadResume() {
+            showToast('Downloading P Pranav Raj Resume...');
+            setTimeout(() => {
+                closeResumeModal();
+            }, 1000);
+        }
+
+        // Toast Notification Function
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = message;
+            toast.classList.remove('translate-y-24', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-y-24', 'opacity-0');
+            }, 3500);
